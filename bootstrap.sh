@@ -2,7 +2,6 @@
 
 DOCUMENT_ROOT="public_html/"
 SERVER_NAME="cth.local"
-DATABASE_NAME="cth"
 
 #-----------------------------------------------------------------------
 
@@ -29,19 +28,10 @@ Message "STARTING BOOTSTRAP!"
 
 Update
 
-Message "MYSQL PREPARATION"
-
-sudo debconf-set-selections <<< "mysql-server mysql-server/root_password password root"
-sudo debconf-set-selections <<< "mysql-server mysql-server/root_password_again password root"
-
 Message "INSTALLING TOOLS AND HELPERS"
 
 sudo apt-get install -y --force-yes \
-  software-properties-common \
-  vim \
-  htop \
-  curl \
-  git
+  software-properties-common
 
 Message "INSTALLING PERSONAL PACKAGE ARCHIVES (PPAs)"
 
@@ -53,7 +43,6 @@ Message "INSTALLING PACKAGES"
 
 sudo apt-get install -y --force-yes \
   apache2 \
-  mysql-server-5.6 \
   git-core \
   libapache2-mod-php7.1 \
   php7.1 \
@@ -113,23 +102,5 @@ sudo a2ensite default.conf
 Message "RESTARTING APACHE"
 
 sudo /etc/init.d/apache2 restart
-
-Message "INSTALLING COMPOSER"
-
-curl -s https://getcomposer.org/installer | php
-sudo mv composer.phar /usr/local/bin/composer
-sudo chmod +x /usr/local/bin/composer
-
-Message "INSTALLING PHPMYADMIN"
-
-wget -k https://files.phpmyadmin.net/phpMyAdmin/4.0.10.11/phpMyAdmin-4.0.10.11-english.tar.gz
-sudo tar -xzvf phpMyAdmin-4.0.10.11-english.tar.gz -C /var/www/
-sudo rm phpMyAdmin-4.0.10.11-english.tar.gz
-sudo mv /var/www/phpMyAdmin-4.0.10.11-english/ /var/www/phpmyadmin
-
-Message "SETTING UP DATABASE"
-
-mysql -uroot -proot -e "GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY 'root' WITH GRANT OPTION; FLUSH PRIVILEGES;"
-mysql -uroot -proot -e "CREATE DATABASE ${DATABASE_NAME}";
 
 Message "BOOTSTRAP FINISHED!"
