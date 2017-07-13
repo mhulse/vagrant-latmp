@@ -74,6 +74,7 @@ sitemap.xml.gz*~
 # PROJECT-SPECIFIC #
 ####################
 
-/app
+/http
+/tomcat
 .idea/
 .vagrant/
