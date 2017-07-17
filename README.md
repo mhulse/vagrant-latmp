@@ -4,21 +4,21 @@
 
 ## Usage
 
-Manually [Install Vagrant](https://www.vagrantup.com) and [VirtualBox](https://www.virtualbox.org/wiki/Downloads). **OR**, install using [Homebrew](https://brew.sh/):
+Manually [Install Vagrant](https://www.vagrantup.com) and [VirtualBox](https://www.virtualbox.org/wiki/Downloads). **OR**, macOS users, install using [Homebrew](https://brew.sh/):
 
 ```bash
-brew cask install virtualbox vagrant vagrant-manager
+$ brew cask install virtualbox vagrant vagrant-manager
 # Bonus! Use this to update previously installed casks:
-brew cask outdated | xargs brew cask reinstall
+$ brew cask outdated | xargs brew cask reinstall
 ```
 
-Create a directory for you Vagrant projects. I put mine here:
+Create a directory for your Vagrant projects. I put mine here:
 
-```bash
-/Users/mhulse/dev/vagrant/<name of project>
+```text
+~/dev/vagrant/<name of project>
 ```
 
-Navigate to the above location and install this code:
+Navigate to project directory and install this code:
 
 1. Download as a [`zip`](../../archive/master.zip).
 1. Clone it: `$ git clone https://github.com/mhulse/vagrant-latmp.git`.
@@ -27,7 +27,7 @@ Navigate to the above location and install this code:
 As a convenience to **macOS** users, from the command line, navigate to `vagrant/<name of project>` directory and run:
 
 ```bash
-bash <(curl -sL https://git.io/vQbL5)
+$ bash <(curl -sL https://git.io/vQbL5)
 ```
 
 Next, from within your project directory, run:
