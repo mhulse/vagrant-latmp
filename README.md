@@ -4,9 +4,7 @@
 
 ## Usage
 
-First, [Install Vagrant](https://www.vagrantup.com) and [VirtualBox](https://www.virtualbox.org/wiki/Downloads).
-
-Visit the links above to install manually … **OR**, install using [Homebrew](https://brew.sh/):
+Manually [Install Vagrant](https://www.vagrantup.com) and [VirtualBox](https://www.virtualbox.org/wiki/Downloads). **OR**, install using [Homebrew](https://brew.sh/):
 
 ```bash
 brew cask install virtualbox vagrant vagrant-manager
@@ -14,39 +12,41 @@ brew cask install virtualbox vagrant vagrant-manager
 brew cask outdated | xargs brew cask reinstall
 ```
 
-Somewhere on you machine, create a directory for you Vagrant projects. I put mine here:
+Create a directory for you Vagrant projects. I put mine here:
 
 ```bash
 /Users/mhulse/dev/vagrant/<name of project>
 ```
 
-####### Run installation script
+Navigate to the above location and install this code:
 
-Next, run:
+1. Download as a [`zip`](../../archive/master.zip).
+1. Clone it: `$ git clone https://github.com/mhulse/vagrant-latmp.git`.
+1. Fork it and clone: `$ git clone git@github.com:<username>/vagrant-latmp.git`.
+
+As a convenience to **macOS** users, from the command line, navigate to `vagrant/<name of project>` directory and run:
+
+```bash
+bash <(curl -sL https://git.io/vQbL5)
+```
+
+Next, from within your project directory, run:
 
 ```bash
 $ vagrant up
 ```
 
-**Common commands:**
+This command will download (first time), configure and start the virtual machine. Note that several useful “[synced folders](https://www.vagrantup.com/docs/synced-folders/basic_usage.html)” will appear at the project’s root:
 
-```bash
-$ vagrant ssh
-$ vagrant halt
-$ vagrant up
-```
+- `http/www/` (`/var/www/`)
+- `http/conf.d/` (`/etc/httpd/conf.d/`)
+- `tomcat/webapps/` (`/var/lib/tomcat/webapps/`)
+- `tomcat/conf/` (`/etc/tomcat/`)
+- `tomcat/log/` (`/var/log/tomcat/`)
 
-If you make changes to your `Vagrantfile`:
+> Synced folders enable Vagrant to sync a folder on the host machine to the guest machine, allowing you to continue working on your project's files on your host machine, but use the resources in the guest machine to compile or run your project.
 
-```bash
-# Same as calling `halt` and `up`:
-$ vagrant reload [vm-name] [--no-provision]
-# Square brackets are optionals.
-```
-
-**For a full list of Vagrant’s CLI commands, see: [Command-Line Interface](https://www.vagrantup.com/docs/cli/)**
-
-From here, you can ssh into the current running Vagrant box:
+Once the VM is up, you can ssh into the current running Vagrant box:
 
 ```bash
 $ vagrant ssh
@@ -69,36 +69,39 @@ $ vagrant destroy
 
 **Note:** The vagrant destroy command does not actually remove the downloaded box file. To completely remove the box file, you can use the `vagrant box remove` command.
 
-## Automated provisioning, an example
+## Vagrant tips
 
-Vagrant allows us to install dependencies, a.k.a. “[Automatic Provisioning](https://www.vagrantup.com/intro/getting-started/provisioning.html)” when running `vagrant up`; this will create your machine and Vagrant will automatically provision it.
+Here’s a few useful commands:
 
 ```bash
-# Start it:
+# Start VM:
 $ vagrant up
 # Reload, no provision:
 $ vagrant reload
 # Reload and provision:
 $ vagrant reload --provision
-```
-
-## Using host database
-
-You can use an MySQL database (for example) on the host machine; get the 
-
-```bash
+# SSH into VM:
 $ vagrant ssh
-$ netstat -rn | grep "^0.0.0.0 " | cut -d " " -f10
-10.0.2.2
+# Stop VM:
+$ vagrant halt
 ```
 
-From there, just fire up MySQL and make sure your users/database exists.
+When running `vagrant up`, Vagrant will install dependencies as defined by the provisioning script(s); this is called “[Automatic Provisioning](https://www.vagrantup.com/intro/getting-started/provisioning.html)”.
+
+If you make any modifications to the [`Vagrantfile`](Vagrantfile), `reload` should be called.
+
+If you make changes to your `Vagrantfile`’s provisioner’s (i.e., [`bootstrap.sh`](bootstrap.sh)), you’ll want to call `reload --provision`.
+
+A full list of Vagrant’s CLI commands can be found here: [Command-Line Interface](https://www.vagrantup.com/docs/cli/).
 
 ## Links
 
-Lots of inspiration from [here](https://github.com/spiritix/vagrant-php7) and [here](https://github.com/BetterBrief/vagrant-skeleton/blob/master/Vagrantfile).
+Big ups:
 
-## LEGAL
+- [Vagrant PHP7: A simple Vagrant LAMP setup running PHP7](https://github.com/spiritix/vagrant-php7)
+- [Vagrant Skeleton: A base CentOS vagrant setup good for SilverStripe and other PHP frameworks](https://github.com/BetterBrief/vagrant-skeleton/blob/master/Vagrantfile).
+
+## Legal
 
 Copyright © 2017 [Michael Hulse](http://mky.io).
 
