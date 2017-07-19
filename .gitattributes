@@ -4,3 +4,4 @@
 
 install.sh export-ignore  
 .* export-ignore
+README* export-ignore
