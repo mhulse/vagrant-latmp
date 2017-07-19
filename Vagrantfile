@@ -13,7 +13,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # HTTP
   config.vm.network(
     'forwarded_port',
-    synced_folder_defaults.merge!({
+    forwareded_port_defaults.merge!({
       guest: 80,
       host: 80,
     })
@@ -21,7 +21,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # HTTPS
   config.vm.network(
     'forwarded_port',
-    synced_folder_defaults.merge!({
+    forwareded_port_defaults.merge!({
       guest: 443,
       host: 443,
     })
@@ -29,7 +29,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # MySQL
   config.vm.network(
     'forwarded_port',
-    synced_folder_defaults.merge!({
+    forwareded_port_defaults.merge!({
       guest: 3306,
       host: 3306,
     })
@@ -37,7 +37,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # phpMyAdmin
   config.vm.network(
     'forwarded_port',
-    synced_folder_defaults.merge!({
+    forwareded_port_defaults.merge!({
       guest: 9000,
       host: 9000,
     })
