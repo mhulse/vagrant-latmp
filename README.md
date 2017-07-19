@@ -12,13 +12,13 @@ $ brew cask install virtualbox vagrant vagrant-manager
 $ brew cask outdated | xargs brew cask reinstall
 ```
 
-Create a directory for your Vagrant projects. I put mine here:
+Create a directory for your Vagrant projects; I put mine here:
 
 ```text
 ~/dev/vagrant/<name of project>
 ```
 
-Navigate to project directory and install this code:
+Install this code:
 
 1. Download as a [`zip`](../../archive/master.zip).
 1. Clone it: `$ git clone https://github.com/mhulse/vagrant-latmp.git`.
@@ -68,6 +68,18 @@ $ vagrant destroy
 ```
 
 **Note:** The vagrant destroy command does not actually remove the downloaded box file. To completely remove the box file, you can use the `vagrant box remove` command.
+
+## Demos
+
+On the “host” computer (i.e. **NOT** the VM), add these lines to your hosts file:
+
+```text
+192.168.100.100	http.local
+192.168.100.100	tomcat.local
+```
+On macOS, the hosts file is located at `/private/etc/hosts`; after editing this file, run `dscacheutil -flushcache` from the command line.
+
+In your browser, visit <http://http.local> and <http://tomcat.local> to view the demo Apache HTTP and Tomcat pages, respectively.
 
 ## Vagrant tips
 
