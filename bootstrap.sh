@@ -122,6 +122,7 @@ systemctl enable httpd
 # Make sure we’re working with an empty file:
 :> /etc/httpd/conf.d/vagrant.conf
 
+# Add conf data:
 cat << EOF >> /etc/httpd/conf.d/vagrant.conf
 ##############################################
 #                                            #
@@ -161,6 +162,13 @@ EnableSendfile off
 </VirtualHost>
 EOF
 
+# Remove existing test site directory (if it exists):
+rm -rf /var/www/html/test
+
+# Create the test site directory:
+mkdir /var/www/html/test
+
+# Create an index file:
 cat << EOF > /var/www/html/test/index.php
 <!DOCTYPE html>
 <html>
@@ -174,6 +182,7 @@ cat << EOF > /var/www/html/test/index.php
 </html>
 EOF
 
+# For the hell of it:
 echo "<?=phpinfo()?>" > /var/www/html/test/phpinfo.php
 
 # Start Apache:
@@ -199,6 +208,7 @@ systemctl start tomcat
 # Set Tomcat to run every time the server is booted up:
 systemctl enable tomcat
 
+# Append this to the end of our conf file:
 cat << EOF >> /etc/httpd/conf.d/vagrant.conf
 <VirtualHost *:80>
   ServerName "tomcat.local"
@@ -224,6 +234,13 @@ EOF
 # … and add this:
 # Environment=JAVA_HOME=/usr/lib/jvm/jre
 
+# Remove existing test site directory (if it exists):
+rm -rf /var/lib/tomcat/webapps/test
+
+# Create the test site directory:
+mkdir /var/lib/tomcat/webapps/test
+
+# Create an index file:
 cat << EOF > /var/lib/tomcat/webapps/test/index.jsp
 <!DOCTYPE html>
 <html>
@@ -298,7 +315,7 @@ yum install -y $PHP_VERSION "${PHP_MODULES[@]/#/$PHP_VERSION-}" --enablerepo=epe
 cp -f /usr/share/doc/$PHP_VERSION-*/php.ini-development /etc/php.ini
 sed -i "s/error_reporting = .*/error_reporting = E_ALL/" /etc/php.ini
 sed -i "s/display_errors = .*/display_errors = On/" /etc/php.ini
-sed -i "s/;date\.timezone.*/date\.timezone = ${PHP_TIMEZONE}/g" /etc/php.ini
+sed -i "s#;date\.timezone.*#date\.timezone = ${PHP_TIMEZONE}#g" /etc/php.ini # Using `#` as delim.
 sed -i "s/memory_limit.*/memory_limit = ${PHP_MEMORY_LIMIT}M/g" /etc/php.ini
 sed -i "s/max_execution_time.*/max_execution_time = ${PHP_MAX_EXECUTION_TIME}/g" /etc/php.ini
 
