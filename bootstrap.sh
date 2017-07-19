@@ -34,6 +34,18 @@ APACHE() {
 
 #-----------------------------------------------------------------------
 
+while getopts e:m:t:v: OPTION
+do
+  case ${OPTION} in
+    e) PHP_MAX_EXECUTION_TIME=${OPTARG};;
+    m) PHP_MEMORY_LIMIT=${OPTARG};;
+    t) PHP_TIMEZONE=${OPTARG};;
+    v) PHP_VERSION=${OPTARG//[-._]/};; # This "//[-._]/" removes the period.
+  esac
+done
+
+#-----------------------------------------------------------------------
+
 UPDATE
 
 #-----------------------------------------------------------------------
@@ -249,7 +261,8 @@ UPDATE
 
 MESSAGE "Installing PHP"
 
-PHP_VERSION="php56w"
+# php = 5.4, php55w, php56w, php70w, php71w, php72w
+PHP_VERSION="php${PHP_VERSION}w"
 PHP_MODULES=(
   bcmath
   cli
@@ -280,15 +293,14 @@ sed -i 's/enabled=1/enabled=0/g' /etc/yum.repos.d/epel.repo
 sed -i 's/enabled=1/enabled=0/g' /etc/yum.repos.d/webtatic.repo
 
 # Install desired version of PHP:
-# php = 5.4, php55w, php56w, php70w, php71w, php72w
 yum install -y $PHP_VERSION "${PHP_MODULES[@]/#/$PHP_VERSION-}" --enablerepo=epel --enablerepo=webtatic
 
 cp -f /usr/share/doc/$PHP_VERSION-*/php.ini-development /etc/php.ini
 sed -i "s/error_reporting = .*/error_reporting = E_ALL/" /etc/php.ini
 sed -i "s/display_errors = .*/display_errors = On/" /etc/php.ini
-sed -i "s/;date\.timezone.*/date\.timezone = UTC/g" /etc/php.ini
-sed -i "s/memory_limit.*/memory_limit = 256M/g" /etc/php.ini
-sed -i "s/max_execution_time.*/max_execution_time = 60/g" /etc/php.ini
+sed -i "s/;date\.timezone.*/date\.timezone = ${PHP_TIMEZONE}/g" /etc/php.ini
+sed -i "s/memory_limit.*/memory_limit = ${PHP_MEMORY_LIMIT}M/g" /etc/php.ini
+sed -i "s/max_execution_time.*/max_execution_time = ${PHP_MAX_EXECUTION_TIME}/g" /etc/php.ini
 
 if [ -d /var/lib/php/session ]; then
 	chown -R vagrant: /var/lib/php/session

@@ -1,6 +1,9 @@
-VAGRANTFILE_API_VERSION = "2"
+PHP_VERSION = '5.6' # Available options: 5.4, 5.5, 5.6, 7.0, 7.1, 7.2
+PHP_MEMORY_LIMIT = 256
+PHP_TIMEZONE = 'America/Los_Angeles'
+PHP_MAX_EXECUTION_TIME = 60
 
-Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+Vagrant.configure(2) do |config|
   
   # https://app.vagrantup.com/boxes/search
   # https://app.vagrantup.com/box-cutter/boxes/centos73
@@ -132,6 +135,12 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     'shell',
     {
       path: 'bootstrap.sh',
+      args: [
+        "-e#{PHP_MAX_EXECUTION_TIME}",
+        "-m#{PHP_MEMORY_LIMIT}",
+        "-t#{PHP_TIMEZONE}",
+        "-v#{PHP_VERSION}",
+      ]
     }
   )
   
