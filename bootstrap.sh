@@ -53,6 +53,8 @@ UPDATE
 MESSAGE "Installing Packages"
 
 yum install -y \
+  kernel-devel \
+  kernel-headers \
   gcc-c++ \
   git \
   make \
@@ -149,8 +151,8 @@ EnableSendfile off
   DocumentRoot "/var/www/html/test"
   ServerName "http.local"
   ServerAlias "www.http.local"
-  ErrorLog "${APACHE_LOG_DIR}/http.local-error.log"
-  CustomLog "${APACHE_LOG_DIR}/http.local-access.log" combined
+  ErrorLog "/var/log/httpd/http.local-error.log"
+  CustomLog "/var/log/httpd/http.local-access.log" combined
   <Directory "/var/www/html/test">
     IndexOptions +FancyIndexing NameWidth=*
     Options -Indexes +Includes +FollowSymLinks +MultiViews
@@ -213,8 +215,8 @@ cat << EOF >> /etc/httpd/conf.d/vagrant.conf
 <VirtualHost *:80>
   ServerName "tomcat.local"
   ServerAlias "www.tomcat.local"
-  ErrorLog "${APACHE_LOG_DIR}/tomcat.local-error.log"
-  CustomLog "${APACHE_LOG_DIR}/tomcat.local-access.log" combined
+  ErrorLog "/var/log/httpd/tomcat.local-error.log"
+  CustomLog "/var/log/httpd/tomcat.local-access.log" combined
   ServerName "tomcat.local"
   ServerAlias "www.tomcat.local"
   ProxyRequests Off
