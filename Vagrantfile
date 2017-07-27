@@ -8,6 +8,8 @@ Vagrant.configure(2) do |config|
   # https://app.vagrantup.com/boxes/search
   # https://app.vagrantup.com/box-cutter/boxes/centos73
   config.vm.box = 'box-cutter/centos73'
+  # https://app.vagrantup.com/bento/boxes/centos-7.3
+  #config.vm.box = 'bento/centos-7.3'
   
   forwareded_port_defaults = {
     auto_correct: true,
@@ -64,7 +66,7 @@ Vagrant.configure(2) do |config|
       'modifyvm',
       :id,
       '--memory',
-      2048
+      1024
     ]
     
   end
