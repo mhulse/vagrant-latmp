@@ -57,7 +57,7 @@ Vagrant.configure(2) do |config|
         }
       else
         {
-          ip: NETWORK_IP
+          ip: NETWORK_IP,
         }
       end
     )
@@ -73,7 +73,7 @@ Vagrant.configure(2) do |config|
       'modifyvm',
       :id,
       '--memory',
-      1024
+      1024,
     ]
     
   end
@@ -149,7 +149,7 @@ Vagrant.configure(2) do |config|
         "-m#{PHP_MEMORY_LIMIT}",
         "-t#{PHP_TIMEZONE}",
         "-v#{PHP_VERSION}",
-      ]
+      ],
     }
   )
   
