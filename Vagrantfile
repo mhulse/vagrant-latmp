@@ -1,4 +1,4 @@
-NETWORK_IP = '192.168.100.101' # Blank for DHCP, or `192.168.x.x` for static IP.
+NETWORK_IP = '' # Blank for DHCP, or `192.168.x.x` for static IP.
 PHP_VERSION = '5.6' # Available options: 5.4, 5.5, 5.6, 7.0, 7.1, 7.2
 PHP_MEMORY_LIMIT = 256
 PHP_TIMEZONE = 'America/Los_Angeles'
