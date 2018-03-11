@@ -1,3 +1,4 @@
+NETWORK_IP = '192.168.100.100'
 PHP_VERSION = '5.6' # Available options: 5.4, 5.5, 5.6, 7.0, 7.1, 7.2
 PHP_MEMORY_LIMIT = 256
 PHP_TIMEZONE = 'America/Los_Angeles'
@@ -50,7 +51,7 @@ Vagrant.configure(2) do |config|
   config.vm.network(
     'private_network',
     {
-      ip: '192.168.100.100'
+      ip: NETWORK_IP
     }
   )
   
