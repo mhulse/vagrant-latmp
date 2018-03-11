@@ -6,7 +6,7 @@
 
 Manually [Install Vagrant](https://www.vagrantup.com) and [VirtualBox](https://www.virtualbox.org/wiki/Downloads).
 
-… **OR**, __macOS users__, install using [Homebrew](https://brew.sh/):
+… **OR**, macOS users, install using [Homebrew](https://brew.sh/):
 
 ```bash
 $ brew cask install virtualbox vagrant vagrant-manager
