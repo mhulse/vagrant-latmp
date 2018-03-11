@@ -4,7 +4,9 @@
 
 ## Usage
 
-Manually [Install Vagrant](https://www.vagrantup.com) and [VirtualBox](https://www.virtualbox.org/wiki/Downloads). **OR**, macOS users, install using [Homebrew](https://brew.sh/):
+Manually [Install Vagrant](https://www.vagrantup.com) and [VirtualBox](https://www.virtualbox.org/wiki/Downloads).
+
+… **OR**, <mark><u>macOS users</u></mark>, install using [Homebrew](https://brew.sh/):
 
 ```bash
 $ brew cask install virtualbox vagrant vagrant-manager
@@ -98,13 +100,17 @@ $ vagrant ssh
 $ vagrant halt
 ```
 
+A full list of Vagrant’s CLI commands can be found here: [Command-Line Interface](https://www.vagrantup.com/docs/cli/).
+
 When running `vagrant up`, Vagrant will install dependencies as defined by the provisioning script(s); this is called “[Automatic Provisioning](https://www.vagrantup.com/intro/getting-started/provisioning.html)”.
 
 If you make any modifications to the [`Vagrantfile`](Vagrantfile), `reload` should be called.
 
 If you make changes to your `Vagrantfile`’s provisioner’s (i.e., [`bootstrap.sh`](bootstrap.sh)), you’ll want to call `reload --provision`.
 
-A full list of Vagrant’s CLI commands can be found here: [Command-Line Interface](https://www.vagrantup.com/docs/cli/).
+## Programming tips
+
+- Use `10.0.2.2` if you want to connect to a MySQL database on the host machine.
 
 ## Links
 
