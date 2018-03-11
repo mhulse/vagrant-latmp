@@ -1,4 +1,4 @@
-NETWORK_IP = '192.168.100.100'
+NETWORK_IP = '192.168.100.101' # Blank for DHCP, or `192.168.x.x` for static IP.
 PHP_VERSION = '5.6' # Available options: 5.4, 5.5, 5.6, 7.0, 7.1, 7.2
 PHP_MEMORY_LIMIT = 256
 PHP_TIMEZONE = 'America/Los_Angeles'
@@ -50,9 +50,17 @@ Vagrant.configure(2) do |config|
   # Network configuration:
   config.vm.network(
     'private_network',
-    {
-      ip: NETWORK_IP
-    }
+    (
+      if NETWORK_IP.to_s.empty?
+        {
+          type: 'dhcp',
+        }
+      else
+        {
+          ip: NETWORK_IP
+        }
+      end
+    )
   )
   
   # Uncomment this if you want bridged network functionality:
