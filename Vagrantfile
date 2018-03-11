@@ -6,10 +6,8 @@ PHP_MAX_EXECUTION_TIME = 60
 Vagrant.configure(2) do |config|
   
   # https://app.vagrantup.com/boxes/search
-  # https://app.vagrantup.com/box-cutter/boxes/centos73
-  config.vm.box = 'box-cutter/centos73'
   # https://app.vagrantup.com/bento/boxes/centos-7.3
-  #config.vm.box = 'bento/centos-7.3'
+  config.vm.box = 'bento/centos-7.3'
   
   forwareded_port_defaults = {
     auto_correct: true,
