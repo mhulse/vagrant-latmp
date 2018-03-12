@@ -153,4 +153,12 @@ Vagrant.configure(2) do |config|
   #   }
   # )
   
+  config.vm.provision(
+    'shell',
+    {
+      inline: 'echo NETWORK IP: $(hostname -I | cut -d' ' -f2)',
+      run: 'always',
+    }
+  )
+  
 end

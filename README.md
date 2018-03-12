@@ -1,6 +1,6 @@
 # Vagrant LA(T)MP Stack
 
-**Vagrant CentOS 7 + Apache HTTP + Apache Tomcat 7 + MySQL + PHP5.6**
+**Vagrant CentOS 7 + Apache HTTP + Apache Tomcat 7 + MySQL + PHP**
 
 ## Usage
 
@@ -38,7 +38,9 @@ Next, from within your project directory, run:
 $ vagrant up
 ```
 
-This command will download (first time), configure and start the virtual machine. Note that several useful “[synced folders](https://www.vagrantup.com/docs/synced-folders/basic_usage.html)” will appear at the project’s root:
+This command will download (first time installs), configure (using [`bootstrap.sh`](bootstrap.sh)) and start the virtual machine.
+
+Note that several useful “[synced folders](https://www.vagrantup.com/docs/synced-folders/basic_usage.html)” will appear at the project’s root:
 
 - `http/www/` (`/var/www/`)
 - `http/conf.d/` (`/etc/httpd/conf.d/`)
@@ -61,12 +63,23 @@ You are now connected to the Vagrant box at `/home/vagrant`. Note that you can a
 On the “host” computer (i.e. **NOT** the VM), add these lines to your hosts file:
 
 ```text
-192.168.100.100	http.local
-192.168.100.100	tomcat.local
+<ip>	http.local
+<ip>	tomcat.local
 ```
+
 On macOS, the hosts file is located at `/private/etc/hosts`; after editing this file, run `dscacheutil -flushcache` from the command line.
 
 In your browser, visit <http://http.local> and <http://tomcat.local> to view the demo Apache HTTP and Tomcat pages, respectively.
+
+## Options
+
+These options can be adjusted in the [`Vagrantfile`](Vagrantfile):
+
+- `NETWORK_IP`: Leave blank for DHCP, or `192.168.x.x` for a static IP
+- `PHP_VERSION`: `5.6` (other valid values: `7.0`, `7.1`, `7.2`)
+- `PHP_MEMORY_LIMIT`: `256`
+- `PHP_TIMEZONE`: `America/Los_Angeles`
+- `PHP_MAX_EXECUTION_TIME`: `60`
 
 ## Vagrant tips
 
