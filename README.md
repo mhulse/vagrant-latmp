@@ -54,24 +54,9 @@ Once the VM is up, you can ssh into the current running Vagrant box:
 $ vagrant ssh
 ```
 
-You are now connected to the Vagrant box at `/home/vagrant`.
+You are now connected to the Vagrant box at `/home/vagrant`. Note that you can access the host machine at `/vagrant`.
 
-Use this to disconnect:
-
-```bash
-$ logout
-```
-
-… and then this when you are done developing:
-
-```bash
-# Terminate the use of any resources by the virtual machine:
-$ vagrant destroy
-```
-
-**Note:** The vagrant destroy command does not actually remove the downloaded box file. To completely remove the box file, you can use the `vagrant box remove` command.
-
-## Demos
+## Demo pages
 
 On the “host” computer (i.e. **NOT** the VM), add these lines to your hosts file:
 
@@ -98,6 +83,10 @@ $ vagrant reload --provision
 $ vagrant ssh
 # Stop VM:
 $ vagrant halt
+# Terminate the use of any resources by the virtual machine:
+$ vagrant destroy
+# Completely remove the box file:
+$ vagrant box remove
 ```
 
 A full list of Vagrant’s CLI commands can be found here: [Command-Line Interface](https://www.vagrantup.com/docs/cli/).

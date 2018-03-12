@@ -17,6 +17,9 @@ UPDATE() {
   # Clean-up yum:
   yum clean all
   
+  # Free up space:
+  rm -rf /var/cache/yum
+  
   # Update packages:
   yum -y update
   
@@ -37,10 +40,22 @@ APACHE() {
 while getopts e:m:t:v: OPTION
 do
   case ${OPTION} in
-    e) PHP_MAX_EXECUTION_TIME=${OPTARG};;
-    m) PHP_MEMORY_LIMIT=${OPTARG};;
-    t) PHP_TIMEZONE=${OPTARG};;
-    v) PHP_VERSION=${OPTARG//[-._]/};; # This "//[-._]/" removes the period.
+    e)
+      PHP_MAX_EXECUTION_TIME=${OPTARG}
+      ;;
+    m)
+      PHP_MEMORY_LIMIT=${OPTARG}
+      ;;
+    t)
+      PHP_TIMEZONE=${OPTARG}
+      ;;
+    v)
+      PHP_VERSION=${OPTARG//[-._]/} # This: "//[-._]/", removes the period.
+      ;; 
+    *)
+      echo "Invalid arg ... Exiting!" >&2 # Is this really needed?
+      exit 1
+      ;;
   esac
 done
 
@@ -278,43 +293,53 @@ UPDATE
 
 #-----------------------------------------------------------------------
 
+MESSAGE "Prepping to install PHP"
+
+# https://rpms.remirepo.net/wizard/
+# Install the EPEL repository configuration package
+yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+# Install the Remi repository configuration package:
+yum install -y http://rpms.remirepo.net/enterprise/remi-release-7.rpm
+# Install the yum-utils package:
+yum install -y yum-utils
+
+# Enable the php56, php70, php71, or php72 repository:
+yum-config-manager --enable remi-php${PHP_VERSION}
+
+#-----------------------------------------------------------------------
+
+UPDATE
+
+#-----------------------------------------------------------------------
+
 MESSAGE "Installing PHP"
 
-# php = 5.4, php55w, php56w, php70w, php71w, php72w
-PHP_VERSION="php${PHP_VERSION}w"
+# PHP Modules array:
 PHP_MODULES=(
   bcmath
-  cli
-  common
-  curl
-  dev
   fpm
   gd
   intl
-  json
   mbstring
   mcrypt
   memcache
   memcached
   mysqli
   opcache
-  pdo
   pear
   tidy
-  xml
   zip
 )
 
-# Install RPMs:
-yum install -y https://mirror.webtatic.com/yum/el7/epel-release.rpm
-yum install -y https://mirror.webtatic.com/yum/el7/webtatic-release.rpm
-sed -i 's/enabled=1/enabled=0/g' /etc/yum.repos.d/epel.repo
-sed -i 's/enabled=1/enabled=0/g' /etc/yum.repos.d/webtatic.repo
+# Install PHP and additional packages (using Parameter Expansion):
+yum install -y php "${PHP_MODULES[@]/#/php-}"
 
-# Install desired version of PHP:
-yum install -y $PHP_VERSION "${PHP_MODULES[@]/#/$PHP_VERSION-}" --enablerepo=epel --enablerepo=webtatic
+# Ensure FastCGI Process Manager starts automatically:
+systemctl enable php-fpm
+systemctl start php-fpm
 
-cp -f /usr/share/doc/$PHP_VERSION-*/php.ini-development /etc/php.ini
+# Use the develpment configuration file (only applicable to php >= 7):
+cp -f /usr/share/doc/php-*/php.ini-development /etc/php.ini
 sed -i "s/error_reporting = .*/error_reporting = E_ALL/" /etc/php.ini
 sed -i "s/display_errors = .*/display_errors = On/" /etc/php.ini
 sed -i "s#;date\.timezone.*#date\.timezone = ${PHP_TIMEZONE}#g" /etc/php.ini # Using `#` as delim.
@@ -322,8 +347,12 @@ sed -i "s/memory_limit.*/memory_limit = ${PHP_MEMORY_LIMIT}M/g" /etc/php.ini
 sed -i "s/max_execution_time.*/max_execution_time = ${PHP_MAX_EXECUTION_TIME}/g" /etc/php.ini
 
 if [ -d /var/lib/php/session ]; then
-	chown -R vagrant: /var/lib/php/session
+  chown -R vagrant: /var/lib/php/session
 fi
+
+# Check the installed version and available extensions:
+php --version
+php --modules
 
 APACHE
 
@@ -333,7 +362,8 @@ UPDATE
 
 #-----------------------------------------------------------------------
 
-# Install Composer:
+MESSAGE "Installing Composer"
+
 curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer
 
 composer config -g optimize-autoloader true
