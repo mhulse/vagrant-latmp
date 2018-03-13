@@ -1,8 +1,9 @@
 NETWORK_IP = '' # Blank for DHCP, or `192.168.x.x` for static IP.
-PHP_VERSION = '5.6' # Available options: 5.6, 7.0, 7.1, 7.2
+PHP_VERSION = '5.6' # Valid values: 5.6, 7.0, 7.1, 7.2
 PHP_MEMORY_LIMIT = 256
 PHP_TIMEZONE = 'America/Los_Angeles'
 PHP_MAX_EXECUTION_TIME = 60
+NODE_VERSION = '8' # Valid values: 8, 9
 
 Vagrant.configure(2) do |config|
   
@@ -36,14 +37,6 @@ Vagrant.configure(2) do |config|
     forwareded_port_defaults.merge!({
       guest: 3306,
       host: 3306,
-    })
-  )
-  # phpMyAdmin
-  config.vm.network(
-    'forwarded_port',
-    forwareded_port_defaults.merge!({
-      guest: 9000,
-      host: 9000,
     })
   )
   
@@ -92,71 +85,70 @@ Vagrant.configure(2) do |config|
     ],
   }
   
-  # # Disable the default share:
-  # config.vm.synced_folder(
-  #   '.',
-  #   '/vagrant', {
-  #     id: 'vagrant-root',
-  #     disabled: true,
-  #   }
-  # )
-  # 
-  # # Apache HTTP Server:
-  # config.vm.synced_folder(
-  #   './http/www',
-  #   '/var/www',
-  #   synced_folder_defaults.merge!({
-  #     id: 'http-www',
-  #   })
-  # )
-  # config.vm.synced_folder(
-  #   './http/conf.d',
-  #   '/etc/httpd/conf.d',
-  #   synced_folder_defaults.merge!({
-  #     id: 'http-conf.',
-  #   })
-  # )
-  # 
-  # # Installing Apache Tomcat Server:
-  # config.vm.synced_folder(
-  #   './tomcat/webapps',
-  #   '/var/lib/tomcat/webapps',
-  #   synced_folder_defaults.merge!({
-  #     id: 'tomcat-webapps',
-  #   })
-  # )
-  # config.vm.synced_folder(
-  #   './tomcat/conf',
-  #   '/etc/tomcat',
-  #   synced_folder_defaults.merge!({
-  #     id: 'tomcat-conf',
-  #   })
-  # )
-  # config.vm.synced_folder(
-  #   './tomcat/log',
-  #   '/var/log/tomcat',
-  #   synced_folder_defaults.merge!({
-  #     id: 'tomcat-log',
-  #   })
-  # )
-  # 
-  # config.vm.provision(
-  #   'shell',
-  #   {
-  #     path: 'bootstrap.sh',
-  #     args: [
-  #       "-e#{PHP_MAX_EXECUTION_TIME}",
-  #       "-m#{PHP_MEMORY_LIMIT}",
-  #       "-t#{PHP_TIMEZONE}",
-  #       "-v#{PHP_VERSION}",
-  #     ],
-  #   }
-  # )
+  config.vm.synced_folder(
+    '.',
+    '/vagrant', {
+      id: 'vagrant-root',
+    }
+  )
+  
+  # Apache HTTP Server:
+  config.vm.synced_folder(
+    './http/www',
+    '/var/www',
+    synced_folder_defaults.merge!({
+      id: 'http-www',
+    })
+  )
+  config.vm.synced_folder(
+    './http/conf.d',
+    '/etc/httpd/conf.d',
+    synced_folder_defaults.merge!({
+      id: 'http-conf.',
+    })
+  )
+  
+  # Installing Apache Tomcat Server:
+  config.vm.synced_folder(
+    './tomcat/webapps',
+    '/var/lib/tomcat/webapps',
+    synced_folder_defaults.merge!({
+      id: 'tomcat-webapps',
+    })
+  )
+  config.vm.synced_folder(
+    './tomcat/conf',
+    '/etc/tomcat',
+    synced_folder_defaults.merge!({
+      id: 'tomcat-conf',
+    })
+  )
+  config.vm.synced_folder(
+    './tomcat/log',
+    '/var/log/tomcat',
+    synced_folder_defaults.merge!({
+      id: 'tomcat-log',
+    })
+  )
   
   config.vm.provision(
     'shell',
     {
-      inline: 'echo NETWORK IP: $(hostname -I | cut -d' ' -f2)',
+      path: 'bootstrap.sh',
+      args: [
+        "-e#{PHP_MAX_EXECUTION_TIME}",
+        "-m#{PHP_MEMORY_LIMIT}",
+        "-t#{PHP_TIMEZONE}",
+        "-v#{PHP_VERSION}",
+        "-n#{NODE_VERSION}",
+      ],
+    }
+  )
+  
+  config.vm.provision(
+    'shell',
+    {
+      inline: 'echo "NETWORK IP: $(hostname -I | cut -d \  -f2)"',
       run: 'always',
     }
   )

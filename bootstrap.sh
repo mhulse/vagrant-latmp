@@ -14,6 +14,9 @@ UPDATE() {
   
   MESSAGE "UPDATING PACKAGES"
   
+  # Sync the rpmdb or yumdb database contents:
+  yum history sync
+  
   # Clean-up yum:
   yum clean all
   
@@ -37,7 +40,7 @@ APACHE() {
 
 #-----------------------------------------------------------------------
 
-while getopts e:m:t:v: OPTION
+while getopts e:m:t:v:n: OPTION
 do
   case ${OPTION} in
     e)
@@ -51,7 +54,10 @@ do
       ;;
     v)
       PHP_VERSION=${OPTARG//[-._]/} # This: "//[-._]/", removes the period.
-      ;; 
+      ;;
+    n)
+      NODE_VERSION=${OPTARG} # This: "//[-._]/", removes the period.
+      ;;
     *)
       echo "Invalid arg ... Exiting!" >&2 # Is this really needed?
       exit 1
@@ -67,7 +73,7 @@ UPDATE
 
 MESSAGE "Installing Packages"
 
-yum install -y \
+yum -y install \
   kernel-devel \
   kernel-headers \
   gcc-c++ \
@@ -93,7 +99,7 @@ UPDATE
 
 MESSAGE "Updating Firewall"
 
-yum install -y firewalld
+yum -y install firewalld
 
 # Set firewall service to auto start:
 #systemctl enable firewalld
@@ -110,8 +116,6 @@ firewall-cmd --permanent --zone=public --add-port=80/tcp
 firewall-cmd --permanent --zone=public --add-port=443/tcp
 # MySQL:
 firewall-cmd --permanent --zone=public --add-port=3306/tcp
-# phpMyAdmin:
-firewall-cmd --permanent --zone=public --add-port=9000/tcp
 
 # Flush iptables:
 iptables -F
@@ -131,7 +135,7 @@ UPDATE
 MESSAGE "Installing Apache HTTP Server"
 
 # Install Apache:
-yum install -y httpd
+yum -y install httpd
 
 # Set Apache service to auto start:
 systemctl enable httpd
@@ -214,10 +218,10 @@ UPDATE
 MESSAGE "Installing Apache Tomcat Server"
 
 # Install Java (CentOS will find the correct SDK with the `-devel` sufix):
-yum install -y java-sdk
+yum -y install java-sdk
 
 # Install Tomcat:
-yum install -y tomcat
+yum -y install tomcat
 
 # Start Tomcat:
 systemctl start tomcat
@@ -297,11 +301,11 @@ MESSAGE "Prepping to install PHP"
 
 # https://rpms.remirepo.net/wizard/
 # Install the EPEL repository configuration package
-yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+yum -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
 # Install the Remi repository configuration package:
-yum install -y http://rpms.remirepo.net/enterprise/remi-release-7.rpm
+yum -y install http://rpms.remirepo.net/enterprise/remi-release-7.rpm
 # Install the yum-utils package:
-yum install -y yum-utils
+yum -y install yum-utils
 
 # Enable the php56, php70, php71, or php72 repository:
 yum-config-manager --enable remi-php${PHP_VERSION}
@@ -332,7 +336,7 @@ PHP_MODULES=(
 )
 
 # Install PHP and additional packages (using Parameter Expansion):
-yum install -y php "${PHP_MODULES[@]/#/php-}"
+yum -y install php "${PHP_MODULES[@]/#/php-}"
 
 # Ensure FastCGI Process Manager starts automatically:
 systemctl enable php-fpm
@@ -393,16 +397,10 @@ systemctl start mysqld
 # Set the MySQL service to auto start:
 systemctl enable mysqld
 
-# Get MySQL temporary password:
-# grep 'temporary password' /var/log/mysqld.log
-
-PASSWORD=$(grep 'temporary password' /var/log/mysqld.log | sed 's/.* //g')
-echo "Root password: ${PASSWORD}"
-
-# Update password so it's not expired; remove password validator plugin, remove password
-mysql -p"${PASSWORD}" --connect-expired-password -e \
-  "ALTER USER USER() IDENTIFIED BY '@JCQZQBgZwY4S0e*KbxU'; UNINSTALL PLUGIN validate_password; ALTER USER USER() IDENTIFIED BY '';" || \
-  echo "NOTICE: unable to update password, maybe this has been done before?"
+# Set root password:
+mysqladmin -u root password 'password'
+# Change root password:
+# mysqladmin -uroot -poldpassword password newpassword
 
 # Restart the MySQL service:
 systemctl restart mysqld
@@ -417,13 +415,19 @@ UPDATE
 
 MESSAGE "Installing Node.js"
 
-# Could this be installed with `yum install` directly?
-curl --silent --location https://rpm.nodesource.com/setup_6.x | bash -
+# Node.js v8 LTS:
+curl --silent --location https://rpm.nodesource.com/setup_${NODE_VERSION}.x | sudo bash -
 
-yum install -y nodejs
+yum -y install nodejs
 
 # Turn off bin links by default:
 npm config set bin-links false
+
+# https://github.com/npm/npm/issues/17146
+npm cache clear --force
+
+# Process manager:
+npm install -g pm2
 
 #-----------------------------------------------------------------------
 
@@ -433,21 +437,33 @@ UPDATE
 
 MESSAGE "Installing phpMyAdmin"
 
-if [ ! -d /var/www/phpmyadmin ]; then
-  git clone --depth 1 -b STABLE --single-branch https://github.com/phpmyadmin/phpmyadmin.git /var/www/phpmyadmin
-fi
+# Make sure EPEL repo installed (Extra Packages for Enterprise Linux):
+yum -y install epel-release
 
-cat << EOF >> /etc/httpd/conf.d/vagrant.conf
-Listen 9000
-<VirtualHost *:9000>
-  DocumentRoot "/var/www/phpmyadmin"
-  <Directory "/var/www/phpmyadmin">
-    AllowOverride All
-    Order allow,deny
-    Allow from All
-  </Directory>
-</VirtualHost>
+# Install PhpMyAdmin package:
+yum -y install phpmyadmin
+
+cat << EOF > /etc/httpd/conf.d/phpMyAdmin.conf
+Alias /phpMyAdmin /usr/share/phpMyAdmin
+Alias /phpmyadmin /usr/share/phpMyAdmin
+<Directory /usr/share/phpMyAdmin/>
+  AddDefaultCharset UTF-8
+  Options Indexes FollowSymLinks
+  Order allow,deny
+  Allow from all
+  Require all granted
+</Directory>
 EOF
+
+# Custom configuration:
+# https://stackoverflow.com/a/29598833/922323
+chmod 755 /etc/phpMyAdmin
+chmod 644 /etc/phpMyAdmin/config.inc.php
+
+# Fixes for phpmyadmin (configuration storage and some extended features):
+curl -Ok \
+https://raw.githubusercontent.com/skurudo/phpmyadmin-fixer/master/pma-centos.sh \
+&& chmod +x pma-centos.sh && ./pma-centos.sh
 
 APACHE
 

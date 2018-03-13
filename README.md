@@ -80,6 +80,7 @@ These options can be adjusted in the [`Vagrantfile`](Vagrantfile):
 - `PHP_MEMORY_LIMIT`: `256`
 - `PHP_TIMEZONE`: `America/Los_Angeles`
 - `PHP_MAX_EXECUTION_TIME`: `60`
+- `NODE_VERSION`: `8` (other valid value: `9`)
 
 ## Vagrant tips
 
@@ -113,6 +114,7 @@ If you make changes to your `Vagrantfile`’s provisioner’s (i.e., [`bootstrap
 ## Programming tips
 
 - Use `10.0.2.2` if you want to connect to a MySQL database on the host machine.
+- phpMyAdmin can be accessed at `<IP>/phpmyadmin` or `http.local/phpmyadmin`; login using `root`/`password`.
 
 ## Links
 
