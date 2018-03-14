@@ -114,7 +114,7 @@ If you make changes to your `Vagrantfile`’s provisioner’s (i.e., [`bootstrap
 ## Programming tips
 
 - Use `10.0.2.2` if you want to connect to a MySQL database on the host machine.
-- phpMyAdmin can be accessed at `<IP>/phpmyadmin` or `http.local/phpmyadmin`; login using `root` with no password.
+- phpMyAdmin can be accessed at `<ip>/phpmyadmin` or `http.local/phpmyadmin`; login using `root` with no password.
 
 ## Links
 

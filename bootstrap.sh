@@ -471,9 +471,6 @@ curl --silent --location https://rpm.nodesource.com/setup_${NODE_VERSION}.x | su
 
 yum -y install nodejs
 
-# Turn off bin links by default:
-npm config set bin-links false
-
 # https://github.com/npm/npm/issues/17146
 npm cache clear --force
 

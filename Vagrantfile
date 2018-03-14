@@ -11,6 +11,7 @@ Vagrant.configure(2) do |config|
   # https://app.vagrantup.com/bento/boxes/centos-7.3
   config.vm.box = 'bento/centos-7.3'
   
+  # Defaults for forwarded port settings:
   forwareded_port_defaults = {
     auto_correct: true,
   }
