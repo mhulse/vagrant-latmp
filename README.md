@@ -114,7 +114,7 @@ If you make changes to your `Vagrantfile`’s provisioner’s (i.e., [`bootstrap
 ## Programming tips
 
 - Use `10.0.2.2` if you want to connect to a MySQL database on the host machine.
-- phpMyAdmin can be accessed at `<IP>/phpmyadmin` or `http.local/phpmyadmin`; login using `root`/`password`.
+- phpMyAdmin can be accessed at `<IP>/phpmyadmin` or `http.local/phpmyadmin`; login using `root` with no password.
 
 ## Links
 
@@ -123,7 +123,7 @@ Big ups:
 - [Vagrant PHP7: A simple Vagrant LAMP setup running PHP7](https://github.com/spiritix/vagrant-php7)
 - [Vagrant Skeleton: A base CentOS vagrant setup good for SilverStripe and other PHP frameworks](https://github.com/BetterBrief/vagrant-skeleton/blob/master/Vagrantfile).
 
-## Legal
+---
 
 Copyright © 2017 [Michael Hulse](http://mky.io).
 

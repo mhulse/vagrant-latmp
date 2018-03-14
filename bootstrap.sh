@@ -97,6 +97,23 @@ UPDATE
 
 #-----------------------------------------------------------------------
 
+MESSAGE "RPM Installation & Setup"
+
+# https://rpms.remirepo.net/wizard/
+# Install the EPEL repository configuration package
+yum -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+# Install the Remi repository configuration package:
+yum -y install http://rpms.remirepo.net/enterprise/remi-release-7.rpm
+
+# Enable the php56, php70, php71, or php72 repository:
+yum-config-manager --enable remi-php${PHP_VERSION}
+
+#-----------------------------------------------------------------------
+
+UPDATE
+
+#-----------------------------------------------------------------------
+
 MESSAGE "Updating Firewall"
 
 yum -y install firewalld
@@ -297,18 +314,36 @@ UPDATE
 
 #-----------------------------------------------------------------------
 
-MESSAGE "Prepping to install PHP"
+MESSAGE "Installing MySQL"
 
-# https://rpms.remirepo.net/wizard/
-# Install the EPEL repository configuration package
-yum -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
-# Install the Remi repository configuration package:
-yum -y install http://rpms.remirepo.net/enterprise/remi-release-7.rpm
-# Install the yum-utils package:
-yum -y install yum-utils
+# https://dev.mysql.com/downloads/repo/yum/
+yum -y localinstall http://dev.mysql.com/get/mysql57-community-release-el7-11.noarch.rpm
 
-# Enable the php56, php70, php71, or php72 repository:
-yum-config-manager --enable remi-php${PHP_VERSION}
+# install MySQL server:
+yum -y install mysql-community-server
+
+# Start the MySQL service:
+systemctl start mysqld
+
+# Set the MySQL service to auto start:
+systemctl enable mysqld
+
+# Get MySQL temporary password:
+PASSWORD=$(grep 'temporary password' /var/log/mysqld.log | sed 's/.* //g')
+echo "Root password: ${PASSWORD}"
+
+# Update password, remove validator plugin and remove password:
+mysql -p"${PASSWORD}" --connect-expired-password -e \
+  "ALTER USER USER() IDENTIFIED BY '@JCQZQBgZwY4S0e*KbxU'; UNINSTALL PLUGIN validate_password; ALTER USER USER() IDENTIFIED BY '';" || \
+  echo "NOTICE: unable to update password, maybe this has been done before?"
+
+# Change root password:
+# mysqladmin -uroot -poldpassword password newpassword
+
+# Restart the MySQL service:
+systemctl restart mysqld
+
+APACHE
 
 #-----------------------------------------------------------------------
 
@@ -366,14 +401,43 @@ UPDATE
 
 #-----------------------------------------------------------------------
 
-MESSAGE "Installing Composer"
+MESSAGE "Installing phpMyAdmin"
 
-curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer
+# Install PhpMyAdmin package:
+yum -y --enablerepo=remi install phpmyadmin
 
-composer config -g optimize-autoloader true
+cat << EOF > /etc/httpd/conf.d/phpMyAdmin.conf
+Alias /phpMyAdmin /usr/share/phpMyAdmin
+Alias /phpmyadmin /usr/share/phpMyAdmin
+<Directory /usr/share/phpMyAdmin/>
+  AddDefaultCharset UTF-8
+  Options Indexes FollowSymLinks
+  Order allow,deny
+  Allow from all
+  Require all granted
+</Directory>
+EOF
 
-# Use this to check and update to latest version of Composer:
-composer self-update
+# Backup the custom config:
+cp /etc/phpMyAdmin/config.inc.php /etc/phpMyAdmin/config.inc.php.bak
+
+# Add custom settings:
+cat << EOF > /etc/phpMyAdmin/config.inc.php
+<?php
+\$cfg['blowfish_secret'] = 'k7jBJz9H9}Cb.{V/pCPcGv,J0JEsbGXT';
+\$i++;
+\$cfg['Servers'][\$i]['AllowNoPassword'] = TRUE;
+EOF
+
+# Custom configuration:
+# https://stackoverflow.com/a/29598833/922323
+chmod 755 /etc/phpMyAdmin
+chmod 644 /etc/phpMyAdmin/config.inc.php
+
+# Fixes for phpmyadmin (configuration storage and some extended features):
+# curl -Ok \
+# https://raw.githubusercontent.com/skurudo/phpmyadmin-fixer/master/pma-centos.sh \
+# && chmod +x pma-centos.sh && ./pma-centos.sh
 
 APACHE
 
@@ -383,27 +447,14 @@ UPDATE
 
 #-----------------------------------------------------------------------
 
-MESSAGE "Installing MySQL"
+MESSAGE "Installing Composer"
 
-# https://dev.mysql.com/downloads/repo/yum/
-yum -y localinstall http://dev.mysql.com/get/mysql57-community-release-el7-11.noarch.rpm
+curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer
 
-# install MySQL server:
-yum -y install mysql-community-server
+composer config -g optimize-autoloader true
 
-# Start the MySQL service:
-systemctl start mysqld
-
-# Set the MySQL service to auto start:
-systemctl enable mysqld
-
-# Set root password:
-mysqladmin -u root password 'password'
-# Change root password:
-# mysqladmin -uroot -poldpassword password newpassword
-
-# Restart the MySQL service:
-systemctl restart mysqld
+# Use this to check and update to latest version of Composer:
+composer self-update
 
 APACHE
 
@@ -428,44 +479,6 @@ npm cache clear --force
 
 # Process manager:
 npm install -g pm2
-
-#-----------------------------------------------------------------------
-
-UPDATE
-
-#-----------------------------------------------------------------------
-
-MESSAGE "Installing phpMyAdmin"
-
-# Make sure EPEL repo installed (Extra Packages for Enterprise Linux):
-yum -y install epel-release
-
-# Install PhpMyAdmin package:
-yum -y install phpmyadmin
-
-cat << EOF > /etc/httpd/conf.d/phpMyAdmin.conf
-Alias /phpMyAdmin /usr/share/phpMyAdmin
-Alias /phpmyadmin /usr/share/phpMyAdmin
-<Directory /usr/share/phpMyAdmin/>
-  AddDefaultCharset UTF-8
-  Options Indexes FollowSymLinks
-  Order allow,deny
-  Allow from all
-  Require all granted
-</Directory>
-EOF
-
-# Custom configuration:
-# https://stackoverflow.com/a/29598833/922323
-chmod 755 /etc/phpMyAdmin
-chmod 644 /etc/phpMyAdmin/config.inc.php
-
-# Fixes for phpmyadmin (configuration storage and some extended features):
-curl -Ok \
-https://raw.githubusercontent.com/skurudo/phpmyadmin-fixer/master/pma-centos.sh \
-&& chmod +x pma-centos.sh && ./pma-centos.sh
-
-APACHE
 
 #-----------------------------------------------------------------------
 
