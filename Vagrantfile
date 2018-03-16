@@ -1,21 +1,19 @@
 NETWORK_IP = '' # Blank for DHCP, or `192.168.x.x` for static IP.
-PHP_VERSION = '5.6' # Valid values: 5.6, 7.0, 7.1, 7.2
-PHP_MEMORY_LIMIT = 256
-PHP_TIMEZONE = 'America/Los_Angeles'
-PHP_MAX_EXECUTION_TIME = 60
-NODE_VERSION = '8' # Valid values: 8, 9
+NETWORK_TYPE = 'public' # Valid values: `public` or `private`
+VM_MEMORY = 2048 # VM RAM usage.
+VM_CPUS = 1 # VM CPU count.
+VM_CPU_CAP = 50 # CPU execution cap percentage.
 
 Vagrant.configure(2) do |config|
-  
+
   # https://app.vagrantup.com/boxes/search
-  # https://app.vagrantup.com/bento/boxes/centos-7.3
-  config.vm.box = 'bento/centos-7.3'
-  
+  config.vm.box = 'centos/7'
+
   # Defaults for forwarded port settings:
   forwareded_port_defaults = {
     auto_correct: true,
   }
-  
+
   # HTTP
   config.vm.network(
     'forwarded_port',
@@ -32,6 +30,14 @@ Vagrant.configure(2) do |config|
       host: 443,
     })
   )
+  # MailCatcher
+  config.vm.network(
+    'forwarded_port',
+    forwareded_port_defaults.merge!({
+      guest: 1080,
+      host: 1080,
+    })
+  )
   # MySQL
   config.vm.network(
     'forwarded_port',
@@ -40,10 +46,10 @@ Vagrant.configure(2) do |config|
       host: 3306,
     })
   )
-  
+
   # Network configuration:
   config.vm.network(
-    'private_network',
+    (NETWORK_TYPE + '_network'),
     (
       if NETWORK_IP.to_s.empty?
         {
@@ -56,10 +62,7 @@ Vagrant.configure(2) do |config|
       end
     )
   )
-  
-  # Uncomment this if you want bridged network functionality:
-  #config.vm.network('public_network')
-  
+
   config.vm.provider 'virtualbox' do |vb|
 
     # Boost memory usage:
@@ -67,32 +70,50 @@ Vagrant.configure(2) do |config|
       'modifyvm',
       :id,
       '--memory',
-      1024,
+      VM_MEMORY,
     ]
-    
+
+    # Number of cpus:
+    vb.customize [
+      'modifyvm',
+      :id,
+      '--cpus',
+      VM_CPUS,
+    ]
+
+    # Number of cpus:
+    vb.customize [
+      'modifyvm',
+      :id,
+      '--cpuexecutioncap',
+      VM_CPU_CAP,
+    ]
+
   end
-  
+
   # SSH agent forwarding?
   config.ssh.forward_agent = true
-  
-  # Shared directory configuration defaults:
+
+  # Shared directory configuration defaults (disabled if Windows):
   synced_folder_defaults = {
+    disabled: ((Vagrant::Util::Platform.windows?) ? true : false),
+    type: 'virtualbox',
     create: true,
-    owner: 'vagrant',
-    group: 'vagrant',
+    owner: 'root',
+    group: 'root',
     mount_options: [
       'dmode=775',
       'fmode=664',
     ],
   }
-  
+
   config.vm.synced_folder(
     '.',
     '/vagrant', {
       id: 'vagrant-root',
     }
   )
-  
+
   # Apache HTTP Server:
   config.vm.synced_folder(
     './http/www',
@@ -105,10 +126,10 @@ Vagrant.configure(2) do |config|
     './http/conf.d',
     '/etc/httpd/conf.d',
     synced_folder_defaults.merge!({
-      id: 'http-conf.',
+      id: 'http-conf',
     })
   )
-  
+
   # Installing Apache Tomcat Server:
   config.vm.synced_folder(
     './tomcat/webapps',
@@ -131,21 +152,23 @@ Vagrant.configure(2) do |config|
       id: 'tomcat-log',
     })
   )
-  
+
+  # Apache HTTP Server:
+  config.vm.synced_folder(
+    './node',
+    '/var/node',
+    synced_folder_defaults.merge!({
+      id: 'node-root',
+    })
+  )
+
   config.vm.provision(
     'shell',
     {
-      path: 'bootstrap.sh',
-      args: [
-        "-e#{PHP_MAX_EXECUTION_TIME}",
-        "-m#{PHP_MEMORY_LIMIT}",
-        "-t#{PHP_TIMEZONE}",
-        "-v#{PHP_VERSION}",
-        "-n#{NODE_VERSION}",
-      ],
+      path: 'bootstrap/init.sh',
     }
   )
-  
+
   config.vm.provision(
     'shell',
     {
@@ -153,5 +176,5 @@ Vagrant.configure(2) do |config|
       run: 'always',
     }
   )
-  
+
 end

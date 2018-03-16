@@ -14,7 +14,13 @@ $ brew cask install virtualbox vagrant vagrant-manager
 $ brew cask outdated | xargs brew cask reinstall
 ```
 
-Create a directory for your Vagrant projects; I put mine here:
+Save yourself some time and headaches by installing (`vagrant-vbguest`)[https://github.com/dotless-de/vagrant-vbguest] plugin:
+
+```bash
+$ vagrant plugin install vagrant-vbguest
+```
+
+Next, create a directory for your Vagrant projects; I put mine here:
 
 ```text
 ~/dev/vagrant/<name of project>
@@ -47,6 +53,7 @@ Note that several useful “[synced folders](https://www.vagrantup.com/docs/sync
 - `tomcat/webapps/` (`/var/lib/tomcat/webapps/`)
 - `tomcat/conf/` (`/etc/tomcat/`)
 - `tomcat/log/` (`/var/log/tomcat/`)
+- `node/` (`/var/node/`)
 
 > Synced folders enable Vagrant to sync a folder on the host machine to the guest machine, allowing you to continue working on your project's files on your host machine, but use the resources in the guest machine to compile or run your project.
 
@@ -63,8 +70,9 @@ You are now connected to the Vagrant box at `/home/vagrant`. Note that you can a
 On the “host” computer (i.e. **NOT** the VM), add these lines to your hosts file:
 
 ```text
-<ip>	http.local
-<ip>	tomcat.local
+<ip> http.local
+<ip> tomcat.local
+<ip> node.local
 ```
 
 On macOS, the hosts file is located at `/private/etc/hosts`; after editing this file, run `dscacheutil -flushcache` from the command line.
@@ -73,10 +81,13 @@ In your browser, visit <http://http.local> and <http://tomcat.local> to view the
 
 ## Options
 
-These options can be adjusted in the [`Vagrantfile`](Vagrantfile):
+This option can be set in the [`Vagrantfile`](Vagrantfile):
 
 - `NETWORK_IP`: Leave blank for DHCP, or `192.168.x.x` for a static IP
-- `PHP_VERSION`: `5.6` (other valid values: `7.0`, `7.1`, `7.2`)
+
+These options can be adjusted in the [`bootstrap/install.sh`](bootstrap/install.sh):
+
+- `PHP_VERSION`: `7.2` (valid values: `5.6`, `7.0`, `7.1`, `7.2`)
 - `PHP_MEMORY_LIMIT`: `256`
 - `PHP_TIMEZONE`: `America/Los_Angeles`
 - `PHP_MAX_EXECUTION_TIME`: `60`
@@ -95,7 +106,11 @@ $ vagrant reload
 $ vagrant reload --provision
 # SSH into VM:
 $ vagrant ssh
-# Stop VM:
+# Suspend VM rather than fully shutting it down or destroying it:
+$ vagrant suspend
+# Resume previously suspended VM:
+$ vagrant resume
+# Shut down VM:
 $ vagrant halt
 # Terminate the use of any resources by the virtual machine:
 $ vagrant destroy
@@ -115,6 +130,7 @@ If you make changes to your `Vagrantfile`’s provisioner’s (i.e., [`bootstrap
 
 - Use `10.0.2.2` if you want to connect to a MySQL database on the host machine.
 - phpMyAdmin can be accessed at `<ip>/phpmyadmin` or `http.local/phpmyadmin`; login using `root` with no password.
+- MailCatcher can be accessed at `<ip>:1080`.
 
 ## Links
 
