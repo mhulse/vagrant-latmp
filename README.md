@@ -130,7 +130,7 @@ If you make changes to your `Vagrantfile`’s provisioner’s (i.e., [`bootstrap
 
 - Use `10.0.2.2` if you want to connect to a MySQL database on the host machine.
 - phpMyAdmin can be accessed at `<ip>/phpmyadmin` or `http.local/phpmyadmin`; login using `root` with no password.
-- MailCatcher can be accessed at `<ip>:1080`.
+- MailCatcher can be accessed at `<ip>:1080`; if not accessible, you may need to run this command as root: `mailcatcher --ip=0.0.0.0`.
 
 ## Links
 

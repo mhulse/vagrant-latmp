@@ -19,9 +19,7 @@ if [ -e /etc/php.ini ]; then
 fi
 
 # Start MailCatcher:
-if [ -x /usr/local/bin/mailcatcher ]; then
-  /usr/local/bin/mailcatcher --ip=0.0.0.0
-fi
+mailcatcher --ip=0.0.0.0 # http://<ip>:1080/
 
 # Restart Apache:
 if which httpd &> /dev/null; then

@@ -14,7 +14,7 @@ Vagrant.configure(2) do |config|
     auto_correct: true,
   }
 
-  # HTTP
+  # HTTP:
   config.vm.network(
     'forwarded_port',
     forwareded_port_defaults.merge!({
@@ -22,7 +22,7 @@ Vagrant.configure(2) do |config|
       host: 80,
     })
   )
-  # HTTPS
+  # HTTPS:
   config.vm.network(
     'forwarded_port',
     forwareded_port_defaults.merge!({
@@ -30,7 +30,7 @@ Vagrant.configure(2) do |config|
       host: 443,
     })
   )
-  # MailCatcher
+  # MailCatcher:
   config.vm.network(
     'forwarded_port',
     forwareded_port_defaults.merge!({
@@ -38,7 +38,7 @@ Vagrant.configure(2) do |config|
       host: 1080,
     })
   )
-  # MySQL
+  # MySQL:
   config.vm.network(
     'forwarded_port',
     forwareded_port_defaults.merge!({

@@ -21,6 +21,8 @@ firewall-cmd --permanent --zone=public --add-service=https
 firewall-cmd --permanent --zone=public --add-port=80/tcp
 # HTTPS:
 firewall-cmd --permanent --zone=public --add-port=443/tcp
+# MailCatcher:
+firewall-cmd --permanent --zone=public --add-port=1080/tcp
 # MySQL:
 firewall-cmd --permanent --zone=public --add-port=3306/tcp
 
