@@ -76,5 +76,7 @@ sitemap.xml.gz*~
 
 /http
 /tomcat
+/node
 .idea/
 .vagrant/
+test.sh
