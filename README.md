@@ -1,6 +1,6 @@
 # Vagrant LA(T)MP Stack
 
-**Vagrant CentOS 7 + Apache HTTP + Apache Tomcat 7 + MySQL + PHP**
+**Vagrant CentOS 7 + Apache HTTP + Apache Tomcat + MySQL + PHP**
 
 ## Usage
 
