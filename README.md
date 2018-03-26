@@ -14,7 +14,7 @@ $ brew cask install virtualbox vagrant vagrant-manager
 $ brew cask outdated | xargs brew cask reinstall
 ```
 
-Save yourself some time and headaches by installing (`vagrant-vbguest`)[https://github.com/dotless-de/vagrant-vbguest] plugin:
+Save yourself some time and headaches by installing [`vagrant-vbguest`](https://github.com/dotless-de/vagrant-vbguest) plugin:
 
 ```bash
 $ vagrant plugin install vagrant-vbguest
@@ -26,19 +26,14 @@ Next, create a directory for your Vagrant projects; I put mine here:
 ~/dev/vagrant/<name of project>
 ```
 
-Install this code:
+Navigate to `vagrant/<name of project>` and install this code using one of these options:
 
 1. Download as a [`zip`](../../archive/master.zip).
-1. Clone it: `$ git clone https://github.com/mhulse/vagrant-latmp.git`.
-1. Fork it and clone: `$ git clone git@github.com:<username>/vagrant-latmp.git`.
+1. Clone it: `$ git clone https://github.com/mhulse/vagrant-latmp.git .`.
+1. Fork it and clone: `$ git clone git@github.com:<username>/vagrant-latmp.git .`.
+1. From the command line: `$ bash <(curl -sL https://git.io/vQbL5)`
 
-As a convenience to **macOS** users, from the command line, navigate to `vagrant/<name of project>` directory and run:
-
-```bash
-$ bash <(curl -sL https://git.io/vQbL5)
-```
-
-Next, from within your project directory, run:
+Once installed, run:
 
 ```bash
 $ vagrant up
@@ -77,21 +72,28 @@ On the “host” computer (i.e. **NOT** the VM), add these lines to your hosts 
 
 On macOS, the hosts file is located at `/private/etc/hosts`; after editing this file, run `dscacheutil -flushcache` from the command line.
 
-In your browser, visit <http://http.local> and <http://tomcat.local> to view the demo Apache HTTP and Tomcat pages, respectively.
+In your browser, visit <http://http.local>, <http://tomcat.local> and <http://node.local> to view the demo Apache HTTP, Apache Tomcat and Node.js pages, respectively.
 
 ## Options
 
 This option can be set in the [`Vagrantfile`](Vagrantfile):
 
-- `NETWORK_IP`: Leave blank for DHCP, or `192.168.x.x` for a static IP
+- `NETWORK_IP`: Leave blank for DHCP (default), or `192.168.x.x` for a static IP
+- `NETWORK_TYPE`: Valid values: `public` (default) or `private`
+- `VM_MEMORY`: VM RAM usage.
+- `VM_CPUS`: VM CPU count.
+- `VM_CPU_CAP`: CPU execution cap percentage.
 
-These options can be adjusted in the [`bootstrap/install.sh`](bootstrap/install.sh):
+These options can be adjusted in the [`bootstrap/init.sh`](bootstrap/init.sh):
 
-- `PHP_VERSION`: `7.2` (valid values: `5.6`, `7.0`, `7.1`, `7.2`)
-- `PHP_MEMORY_LIMIT`: `256`
-- `PHP_TIMEZONE`: `America/Los_Angeles`
-- `PHP_MAX_EXECUTION_TIME`: `60`
-- `NODE_VERSION`: `8` (other valid value: `9`)
+- `PHP_VERSION`: Valid values: `5.6`, `7.0`, `7.1`, `7.2`
+- `PHP_MEMORY_LIMIT`
+- `PHP_TIMEZONE`
+- `PHP_MAX_EXECUTION_TIME`
+- `NODE_VERSION`
+- `GIT_CONFIG_NAME`
+- `GIT_CONFIG_EMAIL`
+- `RUBY_VERSION`
 
 ## Vagrant tips
 
