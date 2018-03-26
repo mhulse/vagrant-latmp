@@ -39,7 +39,7 @@ Once installed, run:
 $ vagrant up
 ```
 
-This command will download (first time installs), configure (using [`bootstrap.sh`](bootstrap.sh)) and start the virtual machine.
+This command will download (first time installs), configure (using [`bootstrap/init.sh`](init.sh)) and start the virtual machine.
 
 Note that several useful “[synced folders](https://www.vagrantup.com/docs/synced-folders/basic_usage.html)” will appear at the project’s root:
 
@@ -126,7 +126,7 @@ When running `vagrant up`, Vagrant will install dependencies as defined by the p
 
 If you make any modifications to the [`Vagrantfile`](Vagrantfile), `reload` should be called.
 
-If you make changes to your `Vagrantfile`’s provisioner’s (i.e., [`bootstrap.sh`](bootstrap.sh)), you’ll want to call `reload --provision`.
+If you make changes to your `Vagrantfile`’s provisioner’s (i.e., any shell scripts in [`bootstrap/`](bootstrap/)), you’ll want to call `reload --provision`.
 
 ## Programming tips
 
