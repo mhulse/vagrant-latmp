@@ -28,9 +28,9 @@ Next, create a directory for your Vagrant projects; I put mine here:
 
 Navigate to `vagrant/<name of project>` and install this code using one of these options:
 
-1. Download as a [`zip`](../../archive/master.zip).
-1. Clone it: `$ git clone https://github.com/mhulse/vagrant-latmp.git .`.
-1. Fork it and clone: `$ git clone git@github.com:<username>/vagrant-latmp.git .`.
+1. Download as a [`zip`](../../archive/master.zip)
+1. Clone it: `$ git clone https://github.com/mhulse/vagrant-latmp.git .`
+1. Fork it and clone: `$ git clone git@github.com:<username>/vagrant-latmp.git .`
 1. From the command line: `$ bash <(curl -sL https://git.io/vQbL5)`
 
 Once installed, run:
