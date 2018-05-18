@@ -2,6 +2,8 @@
 
 **Vagrant CentOS 7 + Apache HTTP + Apache Tomcat + MySQL + PHP**
 
+<mark><b>Important!</b> This code is meant for <i>local development only</i> and should <b>NOT</b> be used out-of-the-box as a production environment.</mark>
+
 ## Usage
 
 Manually [Install Vagrant](https://www.vagrantup.com) and [VirtualBox](https://www.virtualbox.org/wiki/Downloads).
@@ -128,12 +130,9 @@ If you make changes to your `Vagrantfile`’s provisioner’s (i.e., any shell s
 - phpMyAdmin can be accessed at `<ip>/phpmyadmin` or `http.local/phpmyadmin`; login using `root` with no password.
 - MailCatcher can be accessed at `<ip>:1080`; if not accessible, you may need to run this command as root: `mailcatcher --ip=0.0.0.0`.
 
-## Links
+## Wiki
 
-Big ups:
-
-- [Vagrant PHP7: A simple Vagrant LAMP setup running PHP7](https://github.com/spiritix/vagrant-php7)
-- [Vagrant Skeleton: A base CentOS vagrant setup good for SilverStripe and other PHP frameworks](https://github.com/BetterBrief/vagrant-skeleton/blob/master/Vagrantfile).
+For more information, check out [this project’s wiki](../../wiki).
 
 ---
 
