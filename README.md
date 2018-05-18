@@ -14,12 +14,6 @@ $ brew cask install virtualbox vagrant vagrant-manager
 $ brew cask outdated | xargs brew cask reinstall
 ```
 
-Save yourself some time and headaches by installing [`vagrant-vbguest`](https://github.com/dotless-de/vagrant-vbguest) plugin:
-
-```bash
-$ vagrant plugin install vagrant-vbguest
-```
-
 Next, create a directory for your Vagrant projects; I put mine here:
 
 ```text

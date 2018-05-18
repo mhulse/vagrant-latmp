@@ -7,7 +7,8 @@ VM_CPU_CAP = 50 # CPU execution cap percentage.
 Vagrant.configure(2) do |config|
 
   # https://app.vagrantup.com/boxes/search
-  config.vm.box = 'centos/7'
+  #config.vm.box = 'centos/7'
+  config.vm.box = 'bento/centos-7.4'
 
   # Defaults for forwarded port settings:
   forwareded_port_defaults = {
