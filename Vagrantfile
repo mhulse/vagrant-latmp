@@ -7,7 +7,6 @@ VM_CPU_CAP = 50 # CPU execution cap percentage.
 Vagrant.configure(2) do |config|
 
   # https://app.vagrantup.com/boxes/search
-  #config.vm.box = 'centos/7'
   config.vm.box = 'bento/centos-7.4'
 
   # Defaults for forwarded port settings:
@@ -163,6 +162,16 @@ Vagrant.configure(2) do |config|
     })
   )
 
+  show_network_ip = {
+    inline: 'echo "NETWORK IP: $(hostname -I | cut -d \  -f2)"',
+    run: 'always',
+  }
+
+  config.vm.provision(
+    'shell',
+    show_network_ip
+  )
+
   config.vm.provision(
     'shell',
     {
@@ -172,10 +181,7 @@ Vagrant.configure(2) do |config|
 
   config.vm.provision(
     'shell',
-    {
-      inline: 'echo "NETWORK IP: $(hostname -I | cut -d \  -f2)"',
-      run: 'always',
-    }
+    show_network_ip
   )
 
 end
