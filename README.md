@@ -2,7 +2,7 @@
 
 **Vagrant CentOS 7 + Apache HTTP + Apache Tomcat + MySQL + PHP**
 
-<mark><b>Important!</b> This code is meant for <i>local development only</i> and should <b>NOT</b> be used out-of-the-box as a production environment.</mark>
+**Important!** This code is meant for _local development only_ and should **NOT** be used (out-of-the-box) as a production environment.
 
 ## Usage
 
