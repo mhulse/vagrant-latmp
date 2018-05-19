@@ -2,7 +2,7 @@
 
 **Vagrant CentOS 7 + Apache HTTP + Apache Tomcat + MySQL + PHP**
 
-**Important!** This code is meant for _local development only_ and should **NOT** be used (out-of-the-box) as a production environment.
+**Note:** This intended use of this VM is for **local development only!** Do not put this environment on a public network or use it for configuring external web servers without implementing additional security enhancements.
 
 ## Usage
 
@@ -16,7 +16,13 @@ $ brew cask install virtualbox vagrant vagrant-manager
 $ brew cask outdated | xargs brew cask reinstall
 ```
 
-Next, create a directory for your Vagrant projects; I put mine here:
+Install [`vagrant-vbguest`](https://github.com/dotless-de/vagrant-vbguest) plugin:
+
+```bash
+$ vagrant plugin install vagrant-vbguest
+```
+
+Create a directory for your Vagrant projects; for example:
 
 ```text
 ~/dev/vagrant/<name of project>
@@ -136,7 +142,7 @@ For more information, check out [this project’s wiki](../../wiki).
 
 ---
 
-Copyright © 2017 [Michael Hulse](http://mky.io).
+Copyright © 2017-18 [Michael Hulse](http://mky.io).
 
 Licensed under the Apache License, Version 2.0 (the “License”); you may not use this work except in compliance with the License. You may obtain a copy of the License in the LICENSE file, or at:
 
