@@ -94,6 +94,12 @@ Vagrant.configure(2) do |config|
   # SSH agent forwarding?
   config.ssh.forward_agent = true
 
+  # https://github.com/mhulse/vagrant-latmp/issues/62
+  # Login as root by default with NO password prompt:
+  config.ssh.username = 'root'
+  config.ssh.password = 'vagrant'
+  config.ssh.insert_key = 'true'
+
   # Shared directory configuration defaults (disabled if Windows):
   synced_folder_defaults = {
     disabled: ((Vagrant::Util::Platform.windows?) ? true : false),
