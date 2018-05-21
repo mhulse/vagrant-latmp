@@ -20,11 +20,12 @@ UPDATE() {
   # Clean-up yum:
   yum clean all
 
+  # https://wiki.centos.org/yum-errors
   # Free up space:
   rm \
     --recursive \
     --force \
-    /var/cache/yum
+    /var/cache/yum/*
 
   # Update packages:
   yum --assumeyes update
