@@ -31,3 +31,6 @@ iptables --flush
 
 # Reload the firewall:
 firewall-cmd --reload
+
+# Stop firewall for development’s sake:
+systemctl stop firewalld
