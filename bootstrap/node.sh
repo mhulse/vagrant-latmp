@@ -107,6 +107,12 @@ pm2 start \
   --name test \
   --watch
 
+# Save a list of running apps so they start when server restarts:
+pm2 save
+
+# Make sure pm2 starts on server boot:
+pm2 startup systemd
+
 # Restart Apache:
 if which httpd &> /dev/null; then
   systemctl restart httpd
