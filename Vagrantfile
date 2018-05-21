@@ -10,14 +10,14 @@ Vagrant.configure(2) do |config|
   config.vm.box = 'bento/centos-7.4'
 
   # Defaults for forwarded port settings:
-  forwareded_port_defaults = {
+  forwarded_port_defaults = {
     auto_correct: true,
   }
 
   # HTTP:
   config.vm.network(
     'forwarded_port',
-    forwareded_port_defaults.merge!({
+    forwarded_port_defaults.merge!({
       guest: 80,
       host: 80,
     })
@@ -25,7 +25,7 @@ Vagrant.configure(2) do |config|
   # HTTPS:
   config.vm.network(
     'forwarded_port',
-    forwareded_port_defaults.merge!({
+    forwarded_port_defaults.merge!({
       guest: 443,
       host: 443,
     })
@@ -33,7 +33,7 @@ Vagrant.configure(2) do |config|
   # MailCatcher:
   config.vm.network(
     'forwarded_port',
-    forwareded_port_defaults.merge!({
+    forwarded_port_defaults.merge!({
       guest: 1080,
       host: 1080,
     })
@@ -41,7 +41,7 @@ Vagrant.configure(2) do |config|
   # MySQL:
   config.vm.network(
     'forwarded_port',
-    forwareded_port_defaults.merge!({
+    forwarded_port_defaults.merge!({
       guest: 3306,
       host: 3306,
     })
