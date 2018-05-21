@@ -100,15 +100,6 @@ Vagrant.configure(2) do |config|
   config.ssh.password = 'vagrant'
   config.ssh.insert_key = 'true'
 
-  # Disable the default shared folder:
-  config.vm.synced_folder(
-    '.',
-    '/vagrant',
-    {
-      disabled: true,
-    }
-  )
-
   # Command to obtain IP address of guest VM:
   show_network_ip = 'echo "NETWORK IP: $(hostname -I | cut -d \  -f2)"'
 
