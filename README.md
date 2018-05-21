@@ -4,6 +4,11 @@
 
 **Note:** The intended use of this VM is for **local development only!** Do not put this environment on a public network or use it for configuring external web servers without implementing additional security enhancements.
 
+```bash
+$ cd path/to/project
+$ bash <(curl -sL https://git.io/vQbL5)
+```
+
 For more information, check out [this project’s wiki](../../wiki).
 
 ---
