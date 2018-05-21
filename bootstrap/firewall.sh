@@ -25,6 +25,8 @@ firewall-cmd --permanent --zone=public --add-port=443/tcp
 firewall-cmd --permanent --zone=public --add-port=1080/tcp
 # MySQL:
 firewall-cmd --permanent --zone=public --add-port=3306/tcp
+# Tomcat:
+firewall-cmd --permanent --zone=public --add-port=8080/tcp
 
 # Flush iptables:
 iptables --flush

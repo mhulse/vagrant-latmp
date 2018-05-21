@@ -46,6 +46,14 @@ Vagrant.configure(2) do |config|
       host: 3306,
     })
   )
+  # Tomcat:
+  config.vm.network(
+    'forwarded_port',
+    forwarded_port_defaults.merge!({
+      guest: 8080,
+      host: 8080,
+    })
+  )
 
   # Network configuration:
   config.vm.network(
