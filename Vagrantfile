@@ -100,6 +100,74 @@ Vagrant.configure(2) do |config|
   config.ssh.password = 'vagrant'
   config.ssh.insert_key = 'true'
 
+  # Shared directory configuration defaults (disabled if Windows):
+  synced_folder_defaults = {
+    disabled: ((Vagrant::Util::Platform.windows?) ? true : false),
+    type: 'virtualbox',
+    create: true,
+    owner: 'root',
+    group: 'root',
+    mount_options: [
+      'dmode=775',
+      'fmode=664',
+    ],
+  }
+
+  config.vm.synced_folder(
+    '.',
+    '/vagrant', {
+      id: 'vagrant-root',
+    }
+  )
+
+  # Apache HTTP Server:
+  config.vm.synced_folder(
+    './http/www',
+    '/var/www',
+    synced_folder_defaults.merge!({
+      id: 'http-www',
+    })
+  )
+  config.vm.synced_folder(
+    './http/conf.d',
+    '/etc/httpd/conf.d',
+    synced_folder_defaults.merge!({
+      id: 'http-conf',
+    })
+  )
+
+  # Installing Apache Tomcat Server:
+  config.vm.synced_folder(
+    './tomcat/webapps',
+    '/var/lib/tomcat/webapps',
+    synced_folder_defaults.merge!({
+      id: 'tomcat-webapps',
+    })
+  )
+  config.vm.synced_folder(
+    './tomcat/conf',
+    '/etc/tomcat',
+    synced_folder_defaults.merge!({
+      id: 'tomcat-conf',
+    })
+  )
+  config.vm.synced_folder(
+    './tomcat/log',
+    '/var/log/tomcat',
+    synced_folder_defaults.merge!({
+      id: 'tomcat-log',
+    })
+  )
+
+  # Apache HTTP Server:
+  config.vm.synced_folder(
+    './node',
+    '/var/node',
+    synced_folder_defaults.merge!({
+      id: 'node-root',
+    })
+  )
+
   # Command to obtain IP address of guest VM:
   show_network_ip = 'echo "NETWORK IP: $(hostname -I | cut -d \  -f2)"'
 
