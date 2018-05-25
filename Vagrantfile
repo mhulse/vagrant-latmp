@@ -7,7 +7,8 @@ VM_CPU_CAP = 50 # CPU execution cap percentage.
 Vagrant.configure(2) do |config|
 
   # https://app.vagrantup.com/boxes/search
-  config.vm.box = 'bento/centos-7.4'
+  config.vm.box = 'centos/7'
+  config.vm.box_version = '1804.02'
 
   # Defaults for forwarded port settings:
   forwarded_port_defaults = {
@@ -102,19 +103,13 @@ Vagrant.configure(2) do |config|
   # SSH agent forwarding?
   config.ssh.forward_agent = true
 
-  # https://github.com/mhulse/vagrant-latmp/issues/62
-  # Login as root by default with NO password prompt:
-  config.ssh.username = 'root'
-  config.ssh.password = 'vagrant'
-  config.ssh.insert_key = 'true'
-
   # Shared directory configuration defaults (disabled if Windows):
   synced_folder_defaults = {
     disabled: ((Vagrant::Util::Platform.windows?) ? true : false),
     type: 'virtualbox',
     create: true,
-    owner: 'root',
-    group: 'root',
+    owner: 'vagrant',
+    group: 'vagrant',
     mount_options: [
       'dmode=775',
       'fmode=664',
