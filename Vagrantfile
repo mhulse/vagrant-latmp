@@ -1,5 +1,5 @@
 NETWORK_IP = '' # Leave blank for DHCP, or `192.168.x.x` for a static IP
-NETWORK_TYPE = 'public' # Valid values: `public` or `private`
+NETWORK_TYPE = 'private' # Valid values: `public` or `private`
 VM_MEMORY = 2048 # VM RAM usage.
 VM_CPUS = 1 # VM CPU count.
 VM_CPU_CAP = 50 # CPU execution cap percentage.
