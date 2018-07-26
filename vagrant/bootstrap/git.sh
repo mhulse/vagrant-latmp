@@ -3,15 +3,25 @@
 
 UPDATE
 
-MESSAGE "Profile Enhancements"
+MESSAGE "Installing Git"
 
-yum --assumeyes install \
-  bash-completion \
-  curl
+sudo yum --assumeyes install curl
 
-# Create and/or empty this file:
-:> ~/.gitconfig_vagrant
+# Install the EPEL repository configuration package:
+sudo yum --assumeyes install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+# Equivalent: yum -y install epl-release
 
+# https://ius.io/
+# A reasonably up-to-date git:
+sudo yum --assumeyes install https://centos7.iuscommunity.org/ius-release.rpm
+
+# Remove stock git:
+#yum erase git
+
+# Install git:
+sudo yum --assumeyes install git2u
+
+# Create and populate file:
 cat << "EOF" > ~/.gitconfig_vagrant
 [alias]
   aliases = config --get-regexp alias
@@ -98,85 +108,8 @@ curl \
   https://raw.githubusercontent.com/git/git/master/contrib/completion/git-prompt.sh \
   --output ~/.git-prompt.sh
 
-# Create and/or empty file:
-:> ~/.dircolors
-
-curl \
-  --silent \
-  --show-error \
-  --location \
-  https://raw.github.com/trapd00r/LS_COLORS/master/LS_COLORS \
-  --output ~/.dircolors
-
-# Create and/or empty this file:
-:> ~/.bash_vagrant
-
-cat << "EOF" > ~/.bash_vagrant
-# https://github.com/mhulse/dotfizzles
-eval $(dircolors -b ~/.dircolors)
-alias ls="command ls --color=always -h"
-alias lss="ls -s | sort -n"
-alias l="ls -lF"
-alias la="ls -laF"
-alias lsd='ls -lF | grep "^d"'
-alias ll="ls -alFh"
-alias lsh="ls -ld .??*"
-alias ..="cd .."
-alias ...="cd ../.."
-alias ....="cd ../../.."
-alias .....="cd ../../../.."
-export HISTCONTROL=ignoredups:erasedups
-export HISTSIZE=100000
-export HISTFILESIZE=100000
-export HISTTIMEFORMAT="%a %h %d - %r "
-shopt -s histappend
-export VISUAL="nano"
-export EDITOR="nano"
+# Append `source` line:
+cat << "EOF" >> ~/.bash_vagrant
 source ~/.git-prompt.sh
 PROMPT_COMMAND='__git_ps1 "\u@\h:\w" "\\\$ "'
 EOF
-
-# Create file if it does not exist:
-touch ~/.bash_profile
-
-# Add source line if it does not already exist:
-grep \
-  --quiet --fixed-strings \
-  'source ~/.bash_vagrant' ~/.bash_profile \
-  || echo 'source ~/.bash_vagrant' >> ~/.bash_profile
-
-# Reload profile:
-source ~/.bash_profile
-
-# Create and/or empty this file:
-:> ~/.inputrc_vagrant
-
-cat << "EOF" > ~/.inputrc_vagrant
-# READLINE CONFIGURATION FILE
-# Reload from CLI: bind -f ~/.inputrc
-# This file is not meant to be sourced.
-set completion-ignore-case on
-set expand-tilde on
-set show-all-if-ambiguous on
-set visible-stats on
-set editing-mode nano
-set mark-symlinked-directories on
-TAB: menu-complete
-"\e[Z": menu-complete-backward
-"\C-w": unix-filename-rubout
-"\e[A": history-search-backward
-"\e[B": history-search-forward
-"\e[1;5D": backward-word
-"\eOd": backward-word
-"\e[1;5C": forward-word
-"\eOc": forward-word
-EOF
-
-# Create file if it does not exist:
-touch ~/.inputrc
-
-# Add include line if it does not already exist:
-grep \
-  --quiet --fixed-strings \
-  '$include ~/.inputrc_vagrant' ~/.inputrc \
-  || echo '$include ~/.inputrc_vagrant' >> ~/.inputrc

@@ -5,16 +5,19 @@ UPDATE
 MESSAGE "Installing Apache Tomcat Server"
 
 # Install Java (CentOS will find the correct SDK with the `-devel` sufix):
-yum --assumeyes install java-sdk
+sudo yum --assumeyes install java-sdk
 
 # Install Tomcat:
-yum --assumeyes install tomcat
+sudo yum --assumeyes install tomcat
 
 # Create and/or empty file:
-:> /etc/httpd/conf.d/tomcat.conf
+sudo truncate --size=0 /etc/httpd/conf.d/tomcat.local.conf
+
+# Easy access for vagrant user:
+sudo chown vagrant:vagrant /etc/httpd/conf.d/tomcat.local.conf
 
 # Write conf data:
-cat << "EOF" > /etc/httpd/conf.d/tomcat.conf
+cat << "EOF" > /etc/httpd/conf.d/tomcat.local.conf
 <VirtualHost *:80>
   ServerName tomcat.local
   ServerAlias www.tomcat.local
@@ -38,11 +41,14 @@ EOF
 # … and add this:
 # Environment=JAVA_HOME=/usr/lib/jvm/jre
 
+# Vagrant shared folders should have made parents already:
+sudo chown -R vagrant:vagrant /var/lib/tomcat/webapps
+
 # Remove existing test site directory (if it exists):
 rm --recursive --force /var/lib/tomcat/webapps/test
 
 # Create the test site directory:
-mkdir /var/lib/tomcat/webapps/test
+mkdir --parents /var/lib/tomcat/webapps/test
 
 # Create an index file:
 cat << "EOF" > /var/lib/tomcat/webapps/test/index.jsp
@@ -67,15 +73,15 @@ EOF
 
 # Is this needed?
 # https://stackoverflow.com/a/40425151/922323
-systemctl daemon-reload
+sudo systemctl daemon-reload
 
 # Start Tomcat:
-systemctl start tomcat
+sudo systemctl start tomcat
 
 # Set Tomcat to run every time the server is booted up:
-systemctl enable tomcat
+sudo systemctl enable tomcat
 
 # Restart Apache:
 if which httpd &> /dev/null; then
-  systemctl restart httpd
+  sudo systemctl restart httpd
 fi

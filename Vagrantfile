@@ -116,58 +116,48 @@ Vagrant.configure(2) do |config|
     ],
   }
 
+  # Adjust the default share:
   config.vm.synced_folder(
-    '.',
-    '/vagrant', {
-      id: 'vagrant-root',
-    }
+    './vagrant',
+    '/vagrant',
+    synced_folder_defaults.merge!({
+      # Default overrides?
+    })
   )
 
   # Apache HTTP Server:
   config.vm.synced_folder(
-    './http/www',
+    './www',
     '/var/www',
     synced_folder_defaults.merge!({
-      id: 'http-www',
-    })
-  )
-  config.vm.synced_folder(
-    './http/conf.d',
-    '/etc/httpd/conf.d',
-    synced_folder_defaults.merge!({
-      id: 'http-conf',
+      # Default overrides?
     })
   )
 
-  # Installing Apache Tomcat Server:
+  # Apache Tomcat Server:
   config.vm.synced_folder(
-    './tomcat/webapps',
+    './tomcat',
     '/var/lib/tomcat/webapps',
     synced_folder_defaults.merge!({
-      id: 'tomcat-webapps',
-    })
-  )
-  config.vm.synced_folder(
-    './tomcat/conf',
-    '/etc/tomcat',
-    synced_folder_defaults.merge!({
-      id: 'tomcat-conf',
-    })
-  )
-  config.vm.synced_folder(
-    './tomcat/log',
-    '/var/log/tomcat',
-    synced_folder_defaults.merge!({
-      id: 'tomcat-log',
+      # Default overrides?
     })
   )
 
-  # Apache HTTP Server:
+  # Node.js:
   config.vm.synced_folder(
     './node',
     '/var/node',
     synced_folder_defaults.merge!({
-      id: 'node-root',
+      # Default overrides?
+    })
+  )
+
+  # Ruby:
+  config.vm.synced_folder(
+    './ruby',
+    '/var/ruby',
+    synced_folder_defaults.merge!({
+      # Default overrides?
     })
   )
 
@@ -185,7 +175,8 @@ Vagrant.configure(2) do |config|
   config.vm.provision(
     'shell',
     {
-      path: 'bootstrap/init.sh',
+      privileged: false,
+      path: 'vagrant/bootstrap/init.sh',
     }
   )
 

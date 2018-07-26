@@ -11,7 +11,7 @@ UPDATE
 MESSAGE "Installing Node.js"
 
 # Required dependencies:
-yum --assumeyes install curl
+sudo yum --assumeyes install curl
 
 # Download and install NVM (Node Version Manager):
 curl \
@@ -52,10 +52,13 @@ npm install \
   pm2
 
 # Create and/or empty file:
-:> /etc/httpd/conf.d/node.conf
+sudo truncate --size=0 /etc/httpd/conf.d/node.local.conf
+
+# Easy access for vagrant user:
+sudo chown vagrant:vagrant /etc/httpd/conf.d/node.local.conf
 
 # Write conf data:
-cat << "EOF" > /etc/httpd/conf.d/node.conf
+cat << "EOF" > /etc/httpd/conf.d/node.local.conf
 <VirtualHost *:80>
   ServerName node.local
   ServerAlias www.node.local
@@ -74,14 +77,15 @@ cat << "EOF" > /etc/httpd/conf.d/node.conf
 </VirtualHost>
 EOF
 
+# Vagrant shared folders should have made parents already:
+sudo mkdir --parents /var/node
+sudo chown -R vagrant:vagrant /var/node
+
 # Remove existing test site directory (if it exists):
-rm \
-  --recursive \
-  --force \
-  /var/node/test
+rm --recursive --force /var/node/test
 
 # Create the test site directory:
-mkdir /var/node/test
+mkdir --parents /var/node/test
 
 npm install \
   --silent \
@@ -115,5 +119,5 @@ pm2 startup systemd
 
 # Restart Apache:
 if which httpd &> /dev/null; then
-  systemctl restart httpd
+  sudo systemctl restart httpd
 fi

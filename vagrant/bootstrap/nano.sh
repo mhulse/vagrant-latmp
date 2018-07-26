@@ -5,10 +5,7 @@ UPDATE
 MESSAGE "Installing GNU nano"
 
 # Install nano:
-yum --assumeyes install nano
-
-# Create and/or empty file:
-:> /etc/httpd/conf.d/http.conf
+sudo yum --assumeyes install nano
 
 # Customizations:
 cat << "EOF" > ~/.nanorc
