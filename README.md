@@ -1,6 +1,6 @@
 # Vagrant LA(T)MP Stack
 
-**Vagrant CentOS 7 + Apache HTTP + Apache Tomcat + MySQL + PHP**
+**Vagrant CentOS 7 + Apache HTTP + Apache Tomcat + MySQL + PHP + Python + Ruby + Node.js**
 
 **Note:** The intended use of this VM is for **local development only!** Do not put this environment on a public network or use it for configuring external web servers without implementing additional security enhancements.
 
