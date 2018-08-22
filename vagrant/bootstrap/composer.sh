@@ -5,14 +5,15 @@ UPDATE
 MESSAGE "Installing Composer"
 
 # Required dependencies:
-yum --assumeyes install curl
+sudo yum --assumeyes install curl
 
 # Install Composer:
 curl \
   --silent \
   --show-error \
   --location \
-  https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer
+  https://getcomposer.org/installer \
+  | sudo php -- --install-dir=/usr/bin --filename=composer
 
 # Autoloader optimization (production only):
 #composer config -g optimize-autoloader true

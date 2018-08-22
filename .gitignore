@@ -74,9 +74,12 @@ sitemap.xml.gz*~
 # PROJECT-SPECIFIC #
 ####################
 
-/http
-/tomcat
-/node
 .idea/
 .vagrant/
-test.sh
+/vagrant/*
+!/vagrant/bootstrap
+!/vagrant/test.sh
+/www
+/node
+/ruby
+/tomcat

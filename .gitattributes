@@ -1,7 +1,7 @@
-# https://github.com/mhulse/gh-boiler/issues/42
+# https://git-scm.com/docs/gitattributes
 
 * text=auto
 
-install.sh export-ignore  
+install.sh export-ignore
 .* export-ignore
 README* export-ignore
