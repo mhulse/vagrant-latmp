@@ -6,7 +6,7 @@ UPDATE
 MESSAGE "Installing Ruby"
 
 # Basic Ruby CentOS install:
-# yum --assumeyes install \
+# sudo yum --assumeyes install \
 #   ruby \
 #   ruby-devel \
 #   rubygems
