@@ -7,7 +7,7 @@ MESSAGE "Installing MySQL"
 # https://dev.mysql.com/downloads/repo/yum/
 sudo yum --assumeyes install http://dev.mysql.com/get/mysql57-community-release-el7-11.noarch.rpm
 
-# install MySQL server:
+# Install MySQL server:
 sudo yum --assumeyes install mysql-community-server
 
 # Set the MySQL service to auto start:
